@@ -1,0 +1,25 @@
+{
+  "name": "nor-studio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ties7/nor-studio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ties7/nor-studio/issues"
+  },
+  "homepage": "https://github.com/Ties7/nor-studio#readme",
+  "dependencies": {
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^2.1.1"
+  }
+}

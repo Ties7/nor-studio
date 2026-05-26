@@ -1,0 +1,24 @@
+{
+  "name": "nor-studio",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "dev:studio": "cd studio && npm run dev"
+  },
+  "dependencies": {
+    "@astrojs/react": "^5.0.4",
+    "@sanity/astro": "^3.3.1",
+    "@sanity/client": "^7.22.0",
+    "@sanity/image-url": "^1.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "lenis": "^1.3.23",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-is": "^19.2.5",
+    "sanity": "^5.23.0",
+    "styled-components": "^6.4.1"
+  }
+}

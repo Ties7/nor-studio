@@ -1,0 +1,62 @@
+---
+import GalleryItem from "./Galleryitem.astro";
+import { urlFor } from "../lib/image";
+
+interface Product {
+  _id: string;
+  name: string;
+  slug: { current: string };
+  image: any;
+  collection: string;
+}
+
+interface Props {
+  products: Product[];
+  speed: number;
+}
+
+const { products, speed } = Astro.props;
+---
+
+<div class="column" data-speed={speed}>
+  {
+    products.map((product, index) => (
+      <GalleryItem
+        href={`/furniture/${product.slug.current}`}
+        sizeIndex={(index % 6) + 1}
+        collection={product.collection}
+        imageSrc={urlFor(product.image).width(1600).url()}
+        name={product.name}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .column {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.2rem;
+
+    will-change: transform;
+
+    transform: translate3d(0, 0, 0);
+  }
+
+  .column:nth-child(1) { margin-top: -12vh; }
+  .column:nth-child(2) { margin-top: -34vh; }
+  .column:nth-child(3) { margin-top: -20vh; }
+
+  @media (max-width: 900px) {
+    .column:nth-child(3) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .column:nth-child(2) {
+      display: none;
+    }
+  }
+</style>

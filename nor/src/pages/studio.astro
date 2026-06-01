@@ -305,6 +305,34 @@ const repeatedColumns = columns.map((column) =>
     mix-blend-mode: difference;
   }
 
+  @media (max-width: 900px) {
+    .gallery-wrapper {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .column:nth-child(3) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .gallery-wrapper {
+      grid-template-columns: 1fr;
+    }
+
+    .column:nth-child(2) {
+      display: none;
+    }
+
+    .size-1 img,
+    .size-2 img,
+    .size-3 img,
+    .size-4 img,
+    .size-5 img,
+    .size-6 img {
+      height: 52vh;
+    }
+  }
 
   .filters {
   position: fixed;

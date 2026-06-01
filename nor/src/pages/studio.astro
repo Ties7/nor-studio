@@ -58,6 +58,17 @@ const speeds = [0.7, 1, 0.85];
     { passive: true }
   );
 
+  function updateTabIndex() {
+    const viewportHeight = window.innerHeight;
+
+    document.querySelectorAll(".item").forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < viewportHeight;
+
+      item.tabIndex = inView ? 0 : -1;
+    });
+  }
+
   function animate() {
     current += (target - current) * ease;
 
@@ -74,6 +85,7 @@ const speeds = [0.7, 1, 0.85];
       column.style.transform = `translate3d(0, ${-y}px, 0)`;
     });
 
+    updateTabIndex();
     requestAnimationFrame(animate);
   }
 
@@ -99,7 +111,7 @@ const speeds = [0.7, 1, 0.85];
 
     padding: 6rem 1.2rem 1.2rem;
 
-    background: #ececec;
+    background: #FFFBEA;
   }
 
   @media (max-width: 900px) {

@@ -20,7 +20,8 @@
 }
 
 :root {
-  --bg: #ececec;
+  /* --bg: #ececec; */
+  /* --bg: #FFFBEA */
   --text: #111111;
 }
 
@@ -34,7 +35,7 @@ body {
   font-family: "Neue Haas Grotesk", sans-serif;
   font-weight: 400;
 
-  background: var(--bg);
+  background: #FFFBEA;
   color: var(--text);
 }
 

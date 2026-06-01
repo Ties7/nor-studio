@@ -1,0 +1,62 @@
+---
+---
+
+<div class="filters">
+  <button class="filter active" data-filter="all">All</button>
+  <button class="filter" data-filter="Nōrden">Nōrden</button>
+  <button class="filter" data-filter="Archive">Archive</button>
+  <button class="filter" data-filter="Limited">Limited</button>
+</div>
+
+<script>
+  const filters = document.querySelectorAll(".filter");
+
+  filters.forEach((filter) => {
+    filter.addEventListener("click", () => {
+      filters.forEach((btn) => btn.classList.remove("active"));
+      filter.classList.add("active");
+
+      document.querySelector(".gallery-wrapper").dataset.active =
+        filter.dataset.filter;
+    });
+  });
+</script>
+
+<style>
+  .filters {
+    position: fixed;
+
+    top: 5rem;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    gap: 1.2rem;
+
+    z-index: 200;
+
+    mix-blend-mode: difference;
+  }
+
+  .filter {
+    border: 0;
+    background: transparent;
+
+    color: white;
+
+    font: inherit;
+    font-size: 1.2rem;
+
+    cursor: pointer;
+
+    opacity: 0.4;
+
+    transition: opacity 0.3s ease;
+  }
+
+  .filter.active {
+    opacity: 1;
+  }
+</style>

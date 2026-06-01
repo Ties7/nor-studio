@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
+import FilterBar from "../components/Filterbar.astro";
+import GalleryColumn from "../components/Gallerycolumn.astro";
 
 import { sanity } from "../lib/sanity";
-import { urlFor } from "../lib/image";
 
 const products = await sanity.fetch(`
   *[_type == "product"]{
@@ -15,8 +16,6 @@ const products = await sanity.fetch(`
   }
 `);
 
-console.log(products);
-
 const columns = [[], [], []];
 
 products.forEach((product, index) => {
@@ -26,83 +25,25 @@ products.forEach((product, index) => {
 const repeatedColumns = columns.map((column) =>
   Array.from({ length: 12 }, () => column).flat()
 );
+
+const speeds = [0.7, 1, 0.85];
 ---
 
 <BaseLayout>
   <Header />
-
-    <div class="filters">
-      <button
-        class="filter active"
-        data-filter="all"
-      >
-        All
-      </button>
-
-      <button
-        class="filter"
-        data-filter="Nōrden"
-      >
-        Nōrden
-      </button>
-
-      <button
-        class="filter"
-        data-filter="Archive"
-      >
-        Archive
-      </button>
-
-      <button
-        class="filter"
-        data-filter="Limited"
-      >
-        Limited
-      </button>
-    </div>
+  <FilterBar />
 
   <section class="gallery-wrapper">
     {
       repeatedColumns.map((column, columnIndex) => (
-        <div
-          class="column"
-          data-speed={
-            columnIndex === 0
-              ? 0.7
-              : columnIndex === 1
-              ? 1
-              : 0.85
-          }
-        >
-          {
-            column.map((product, index) => (
-              <a
-                href={`/furniture/${product.slug.current}`}
-                class={`item size-${(index % 6) + 1}`}
-                data-collection={product.collection}
-              >
-                <img
-                  src={urlFor(product.image)
-                    .width(1600)
-                    .url()}
-                  alt={product.name}
-                  loading="eager"
-                  decoding="async"
-                />
-
-                <span>{product.name}</span>
-              </a>
-            ))
-          }
-        </div>
+        <GalleryColumn products={column} speed={speeds[columnIndex]} />
       ))
     }
   </section>
 </BaseLayout>
 
 <script>
-  const columns =
-    document.querySelectorAll(".column");
+  const columns = document.querySelectorAll(".column");
 
   let current = 0;
   let target = 0;
@@ -121,67 +62,22 @@ const repeatedColumns = columns.map((column) =>
     current += (target - current) * ease;
 
     columns.forEach((column) => {
-      const speed =
-        parseFloat(column.dataset.speed);
+      const speed = parseFloat(column.dataset.speed);
+      const contentHeight = column.scrollHeight / 2;
 
-      const contentHeight =
-        column.scrollHeight / 2;
-
-      let y =
-        (current * speed) % contentHeight;
+      let y = (current * speed) % contentHeight;
 
       if (y < 0) {
         y += contentHeight;
       }
 
-      column.style.transform =
-        `translate3d(0, ${-y}px, 0)`;
+      column.style.transform = `translate3d(0, ${-y}px, 0)`;
     });
 
     requestAnimationFrame(animate);
   }
 
   animate();
-
-    const filters =
-    document.querySelectorAll(
-      ".filter"
-    );
-
-  const items =
-    document.querySelectorAll(
-      ".item"
-    );
-
-  filters.forEach((filter) => {
-    filter.addEventListener(
-      "click",
-      () => {
-        filters.forEach((btn) =>
-          btn.classList.remove("active")
-        );
-
-        filter.classList.add("active");
-
-        const selected =
-          filter.dataset.filter;
-
-        items.forEach((item) => {
-          if (
-            selected === "all" ||
-            item.dataset.collection ===
-              selected
-          ) {
-            item.style.display =
-              "block";
-          } else {
-            item.style.display =
-              "none";
-          }
-        });
-      }
-    );
-  });
 </script>
 
 <style>
@@ -202,114 +98,13 @@ const repeatedColumns = columns.map((column) =>
     gap: 1.2rem;
 
     padding: 6rem 1.2rem 1.2rem;
-  }
 
-  .column {
-    display: flex;
-    flex-direction: column;
-
-    gap: 1.2rem;
-
-    will-change: transform;
-
-    transform: translate3d(0, 0, 0);
-  }
-
-  .column:nth-child(1) {
-    margin-top: -12vh;
-  }
-
-  .column:nth-child(2) {
-    margin-top: -34vh;
-  }
-
-  .column:nth-child(3) {
-    margin-top: -20vh;
-  }
-
-  .item {
-    position: relative;
-
-    overflow: hidden;
-
-    display: block;
-
-    text-decoration: none;
-
-    background: #ddd;
-
-    flex-shrink: 0;
-  }
-
-  img {
-    width: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    transform: translateZ(0);
-
-    backface-visibility: hidden;
-
-    will-change: transform;
-
-    transition:
-      transform 1.2s cubic-bezier(.19,1,.22,1);
-  }
-
-  .size-1 img {
-    height: 58rem;
-  }
-
-  .size-2 img {
-    height: 36rem;
-  }
-
-  .size-3 img {
-    height: 48rem;
-  }
-
-  .size-4 img {
-    height: 42rem;
-  }
-
-  .size-5 img {
-    height: 64rem;
-  }
-
-  .size-6 img {
-    height: 40rem;
-  }
-
-  .item:hover img {
-    transform:
-      translateZ(0)
-      scale(1.025);
-  }
-
-  span {
-    position: absolute;
-
-    left: 1.4rem;
-    bottom: 1.4rem;
-
-    color: white;
-
-    font-size: 1.4rem;
-
-    z-index: 2;
-
-    mix-blend-mode: difference;
+    background: #ececec;
   }
 
   @media (max-width: 900px) {
     .gallery-wrapper {
       grid-template-columns: repeat(2, 1fr);
-    }
-
-    .column:nth-child(3) {
-      display: none;
     }
   }
 
@@ -317,55 +112,5 @@ const repeatedColumns = columns.map((column) =>
     .gallery-wrapper {
       grid-template-columns: 1fr;
     }
-
-    .column:nth-child(2) {
-      display: none;
-    }
-
-    .size-1 img,
-    .size-2 img,
-    .size-3 img,
-    .size-4 img,
-    .size-5 img,
-    .size-6 img {
-      height: 52vh;
-    }
   }
-
-  .filters {
-  position: fixed;
-
-  top: 5rem;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  display: flex;
-
-  gap: 1.2rem;
-
-  z-index: 200;
-
-  mix-blend-mode: difference;
-}
-
-.filter {
-  border: 0;
-  background: transparent;
-
-  color: white;
-
-  font: inherit;
-  font-size: 1.2rem;
-
-  cursor: pointer;
-
-  opacity: .4;
-
-  transition: opacity .3s ease;
-}
-
-.filter.active {
-  opacity: 1;
-}
 </style>

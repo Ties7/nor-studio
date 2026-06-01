@@ -1,0 +1,95 @@
+---
+interface Props {
+  href: string;
+  sizeIndex: number;
+  collection: string;
+  imageSrc: string;
+  name: string;
+}
+
+const { href, sizeIndex, collection, imageSrc, name } = Astro.props;
+---
+
+<a
+  href={href}
+  class={`item size-${sizeIndex}`}
+  data-collection={collection}
+>
+  <img
+    src={imageSrc}
+    alt={name}
+    loading="eager"
+    decoding="async"
+  />
+
+  <span>{name}</span>
+</a>
+
+<style>
+  .item {
+    position: relative;
+
+    overflow: hidden;
+
+    display: block;
+
+    text-decoration: none;
+
+    background: #ddd;
+
+    flex-shrink: 0;
+  }
+
+  img {
+    width: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transform: translateZ(0);
+
+    backface-visibility: hidden;
+
+    will-change: transform;
+
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .size-1 img { height: 58rem; }
+  .size-2 img { height: 36rem; }
+  .size-3 img { height: 48rem; }
+  .size-4 img { height: 42rem; }
+  .size-5 img { height: 64rem; }
+  .size-6 img { height: 40rem; }
+
+  .item:hover img {
+    transform: translateZ(0) scale(1.025);
+  }
+
+  span {
+    position: absolute;
+
+    left: 1.4rem;
+    bottom: 1.4rem;
+
+    color: white;
+
+    font-size: 1.4rem;
+
+    z-index: 2;
+
+    mix-blend-mode: difference;
+  }
+
+  @media (max-width: 640px) {
+    .size-1 img,
+    .size-2 img,
+    .size-3 img,
+    .size-4 img,
+    .size-5 img,
+    .size-6 img {
+      height: 52vh;
+    }
+  }
+</style>

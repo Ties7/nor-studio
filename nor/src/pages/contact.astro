@@ -1,6 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
+
+  const success =
+    Astro.url.searchParams.get("success");
+
+  const error =
+    Astro.url.searchParams.get("error");
 ---
 
 <BaseLayout>
@@ -36,7 +42,27 @@ import Header from "../components/Header.astro";
       </div>
     </div>
 
-    <form class="form" id="contact-form">
+    <form
+      class="form"
+      method="POST"
+      action="/api/contact"
+    >
+      {
+        success && (
+          <p class="status success">
+            Thanks, your message has been sent.
+          </p>
+        )
+      }
+
+      {
+        error && (
+          <p class="status error">
+            Something went wrong.
+          </p>
+        )
+      }
+
       <div class="field">
         <input
             name="name"
@@ -70,62 +96,7 @@ import Header from "../components/Header.astro";
   </section>
 </BaseLayout>
 
-<script>
-  const form =
-    document.querySelector(
-      "#contact-form"
-    );
 
-  form.addEventListener(
-    "submit",
-    async (e) => {
-      e.preventDefault();
-
-      const formData =
-        new FormData(form);
-
-      const data = {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        message: formData.get("message"),
-      };
-
-      try {
-        const response =
-          await fetch(
-            "/api/contact",
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body:
-                JSON.stringify(data),
-            }
-          );
-
-        if (response.ok) {
-          alert("Message sent!");
-
-          form.reset();
-        } else {
-          alert(
-            "Something went wrong."
-          );
-        }
-      } catch (error) {
-        console.error(error);
-
-        alert(
-          "Something went wrong."
-        );
-      }
-    }
-  );
-</script>
 
 <style>
   .contact {
@@ -326,5 +297,18 @@ import Header from "../components/Header.astro";
     textarea {
       font-size: 2rem;
     }
+  }
+
+  .status {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .success {
+    color: green;
+  }
+
+  .error {
+    color: red;
   }
 </style>

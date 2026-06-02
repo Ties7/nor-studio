@@ -1,28 +1,42 @@
 import nodemailer from "nodemailer";
 
 export async function POST({ request }) {
-  const { name, email, message } =
-    await request.json();
+  const formData =
+    await request.formData();
+
+  const name =
+    formData.get("name");
+
+  const email =
+    formData.get("email");
+
+  const message =
+    formData.get("message");
 
   const transporter =
     nodemailer.createTransport({
       service: "gmail",
 
       auth: {
-        user: import.meta.env.EMAIL_USER,
-        pass: import.meta.env.EMAIL_PASS,
+        user:
+          import.meta.env.EMAIL_USER,
+        pass:
+          import.meta.env.EMAIL_PASS,
       },
     });
 
   try {
     await transporter.sendMail({
-      from: import.meta.env.EMAIL_USER,
+      from:
+        import.meta.env.EMAIL_USER,
 
-      to: "hello@norstudio.com",
+      to:
+        "hello@norstudio.com",
 
       replyTo: email,
 
-      subject: `New inquiry from ${name}`,
+      subject:
+        `New inquiry from ${name}`,
 
       html: `
         <h2>New inquiry</h2>
@@ -45,24 +59,22 @@ export async function POST({ request }) {
       `,
     });
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-      }),
-      {
-        status: 200,
-      }
+    return Response.redirect(
+      new URL(
+        "/contact?success=true",
+        request.url
+      ),
+      303
     );
   } catch (error) {
     console.error(error);
 
-    return new Response(
-      JSON.stringify({
-        success: false,
-      }),
-      {
-        status: 500,
-      }
+    return Response.redirect(
+      new URL(
+        "/contact?error=true",
+        request.url
+      ),
+      303
     );
   }
 }

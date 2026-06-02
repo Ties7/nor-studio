@@ -70,7 +70,62 @@ import Header from "../components/Header.astro";
   </section>
 </BaseLayout>
 
+<script>
+  const form =
+    document.querySelector(
+      "#contact-form"
+    );
 
+  form.addEventListener(
+    "submit",
+    async (e) => {
+      e.preventDefault();
+
+      const formData =
+        new FormData(form);
+
+      const data = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        message: formData.get("message"),
+      };
+
+      try {
+        const response =
+          await fetch(
+            "/api/contact",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body:
+                JSON.stringify(data),
+            }
+          );
+
+        if (response.ok) {
+          alert("Message sent!");
+
+          form.reset();
+        } else {
+          alert(
+            "Something went wrong."
+          );
+        }
+      } catch (error) {
+        console.error(error);
+
+        alert(
+          "Something went wrong."
+        );
+      }
+    }
+  );
+</script>
 
 <style>
   .contact {

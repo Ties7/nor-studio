@@ -2,8 +2,8 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 
-import { sanity } from "../../lib/sanity";
-import { urlFor } from "../../lib/image";
+import { sanity } from "../../lib/sanity.js";
+import { urlFor } from "../../lib/image.js";
 
 export async function getStaticPaths() {
   const products = await sanity.fetch(`

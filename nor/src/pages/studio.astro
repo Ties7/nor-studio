@@ -33,7 +33,7 @@ const speeds = [0.7, 1, 0.85];
   <Header />
   <FilterBar />
 
-  <section class="gallery-wrapper">
+  <section class="gallery-wrapper gallery-wrapper--no-js">
     {
       repeatedColumns.map((column, columnIndex) => (
         <GalleryColumn products={column} speed={speeds[columnIndex]} />
@@ -43,6 +43,7 @@ const speeds = [0.7, 1, 0.85];
 </BaseLayout>
 
 <script>
+  document.querySelector('.gallery-wrapper').classList.remove('gallery-wrapper--no-js');
   const columns = document.querySelectorAll(".column");
 
   let current = 0;
@@ -92,25 +93,19 @@ const speeds = [0.7, 1, 0.85];
   animate();
 </script>
 
-<style>
-  :global(body) {
+<style is:global>
+  body {
     overflow: hidden;
   }
 
   .gallery-wrapper {
     position: fixed;
-
     inset: 0;
-
     overflow: hidden;
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     gap: 1.2rem;
-
     padding: 6rem 1.2rem 1.2rem;
-
     background: #FFFBEA;
   }
 
@@ -124,5 +119,15 @@ const speeds = [0.7, 1, 0.85];
     .gallery-wrapper {
       grid-template-columns: 1fr;
     }
+  }
+
+  .gallery-wrapper--no-js {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  body:has(.gallery-wrapper--no-js) {
+    overflow: auto !important;
   }
 </style>

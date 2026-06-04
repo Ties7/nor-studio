@@ -43,54 +43,63 @@ const speeds = [0.7, 1, 0.85];
 </BaseLayout>
 
 <script>
-  document.querySelector('.gallery-wrapper').classList.remove('gallery-wrapper--no-js');
-  const columns = document.querySelectorAll(".column");
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-  let current = 0;
-  let target = 0;
+  if (!prefersReducedMotion) {
+    document
+      .querySelector(".gallery-wrapper")
+      .classList.remove("gallery-wrapper--no-js");
 
-  const ease = 0.05;
+    const columns = document.querySelectorAll(".column");
 
-  window.addEventListener(
-    "wheel",
-    (e) => {
-      target += e.deltaY * 0.8;
-    },
-    { passive: true }
-  );
+    let current = 0;
+    let target = 0;
 
-  function updateTabIndex() {
-    const viewportHeight = window.innerHeight;
+    const ease = 0.05;
 
-    document.querySelectorAll(".item").forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      const inView = rect.bottom > 0 && rect.top < viewportHeight;
+    window.addEventListener(
+      "wheel",
+      (e) => {
+        target += e.deltaY * 0.8;
+      },
+      { passive: true }
+    );
 
-      item.tabIndex = inView ? 0 : -1;
-    });
+    function updateTabIndex() {
+      const viewportHeight = window.innerHeight;
+
+      document.querySelectorAll(".item").forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < viewportHeight;
+
+        item.tabIndex = inView ? 0 : -1;
+      });
+    }
+
+    function animate() {
+      current += (target - current) * ease;
+
+      columns.forEach((column) => {
+        const speed = parseFloat(column.dataset.speed);
+        const contentHeight = column.scrollHeight / 2;
+
+        let y = (current * speed) % contentHeight;
+
+        if (y < 0) {
+          y += contentHeight;
+        }
+
+        column.style.transform = `translate3d(0, ${-y}px, 0)`;
+      });
+
+      updateTabIndex();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   }
-
-  function animate() {
-    current += (target - current) * ease;
-
-    columns.forEach((column) => {
-      const speed = parseFloat(column.dataset.speed);
-      const contentHeight = column.scrollHeight / 2;
-
-      let y = (current * speed) % contentHeight;
-
-      if (y < 0) {
-        y += contentHeight;
-      }
-
-      column.style.transform = `translate3d(0, ${-y}px, 0)`;
-    });
-
-    updateTabIndex();
-    requestAnimationFrame(animate);
-  }
-
-  animate();
 </script>
 
 <style is:global>
@@ -129,5 +138,11 @@ const speeds = [0.7, 1, 0.85];
 
   body:has(.gallery-wrapper--no-js) {
     overflow: auto !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .column {
+      margin-top: 0 !important;
+    }
   }
 </style>

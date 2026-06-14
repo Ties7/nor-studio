@@ -1,5 +1,4 @@
 {
   "buildCommand": "cd nor && npm run build",
-  "installCommand": "cd nor && npm install",
-  "outputDirectory": "nor/.vercel/output"
+  "installCommand": "cd nor && npm install"
 }

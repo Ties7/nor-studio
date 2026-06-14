@@ -5,7 +5,7 @@ import react from "@astrojs/react";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   integrations: [
     sanity({
       projectId: "etjm03yk",
